@@ -4,6 +4,7 @@ from sqlmodel import Session, select
 from app.db.session import get_session
 from app.core.security import decode_token
 from app.models import User, UserRole
+from typing import Optional
 
 
 bearer_scheme = HTTPBearer(auto_error=False)
@@ -14,7 +15,7 @@ def get_db() -> Session:
 
 
 def get_current_user(
-    creds: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
     db: Session = Depends(get_db),
 ):
     if not creds:
@@ -36,9 +37,8 @@ def require_roles(*roles: UserRole):
     return _dep
 
 
-def broker_row_scope(user: User = Depends(get_current_user)) -> int | None:
+def broker_row_scope(user: User = Depends(get_current_user)) -> Optional[int]:
     # Brokers only see their own; Admin/Processor get None (no extra filter)
     if user.role == UserRole.Broker:
         return user.id
     return None
-

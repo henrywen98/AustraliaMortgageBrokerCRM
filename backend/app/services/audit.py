@@ -1,16 +1,16 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from sqlmodel import Session
 from app.models import ActivityLog
 
 
 def log_activity(
     db: Session,
-    actor_user_id: int | None,
+    actor_user_id: Optional[int],
     entity_type: str,
     entity_id: int,
     action: str,
-    diff: Dict[str, Any] | None = None,
-    ip: str | None = None,
+    diff: Optional[Dict[str, Any]] = None,
+    ip: Optional[str] = None,
 ):
     log = ActivityLog(
         actor_user_id=actor_user_id,
@@ -22,4 +22,3 @@ def log_activity(
     )
     db.add(log)
     db.commit()
-

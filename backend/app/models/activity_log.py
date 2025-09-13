@@ -1,6 +1,7 @@
 from typing import Optional, Dict, Any
 from datetime import datetime
-from sqlmodel import SQLModel, Field, JSON
+from sqlmodel import SQLModel, Field
+from sqlalchemy import Column, JSON
 
 
 class ActivityLog(SQLModel, table=True):
@@ -11,7 +12,6 @@ class ActivityLog(SQLModel, table=True):
     entity_type: str
     entity_id: int
     action: str
-    diff_json: Dict[str, Any] = Field(default_factory=dict, sa_column_kwargs={"type_": JSON})
+    diff_json: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))
     ip: Optional[str] = None
     ts: datetime = Field(default_factory=datetime.utcnow)
-

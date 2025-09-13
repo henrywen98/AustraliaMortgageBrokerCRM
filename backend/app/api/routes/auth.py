@@ -8,6 +8,7 @@ from app.services.auth import authenticate, issue_tokens, register_user
 from app.core.security import decode_token, create_access_token
 from app.core.config import settings
 import redis
+from typing import Optional
 
 
 router = APIRouter()
@@ -45,7 +46,7 @@ def login(payload: LoginRequest, response: Response, db: Session = Depends(get_d
 
 
 @router.post("/refresh", response_model=TokenPair)
-def refresh_token(response: Response, refresh_token: str | None = None, db: Session = Depends(get_db)):
+def refresh_token(response: Response, refresh_token: Optional[str] = None, db: Session = Depends(get_db)):
     token = refresh_token
     if not token:
         raise HTTPException(status_code=401, detail="Missing token")

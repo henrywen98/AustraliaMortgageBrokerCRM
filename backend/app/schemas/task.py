@@ -14,10 +14,10 @@ class TaskRead(BaseModel):
     id: int
     deal_id: int
     title: str
-    assignee_user_id: int | None
+    assignee_user_id: Optional[int]
     status: str
     priority: str
-    due_date: str | None
+    due_date: Optional[str]
 
     class Config:
         from_attributes = True
@@ -29,4 +29,3 @@ class TaskUpdate(BaseModel):
     due_date: Optional[str] = None
     priority: Optional[str] = None
     status: Optional[str] = None
-

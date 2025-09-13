@@ -1,7 +1,8 @@
 from typing import Optional, List
 from enum import Enum
 from datetime import date, datetime
-from sqlmodel import SQLModel, Field, Column, ARRAY
+from sqlmodel import SQLModel, Field
+from sqlalchemy import Column, JSON
 
 
 class DealStage(str, Enum):
@@ -22,8 +23,7 @@ class Deal(SQLModel, table=True):
     loan_type: Optional[str] = None
     amount: Optional[float] = None
     stage: DealStage = Field(default=DealStage.Enquiry)
-    tags: List[str] = Field(default_factory=list, sa_column=Column(ARRAY(item_type=str)))
+    tags: List[str] = Field(default_factory=list, sa_column=Column(JSON))
     due_date: Optional[date] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
-

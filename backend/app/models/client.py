@@ -1,5 +1,6 @@
 from typing import Optional, Dict, Any
-from sqlmodel import SQLModel, Field, JSON
+from sqlmodel import SQLModel, Field
+from sqlalchemy import Column, JSON
 
 
 class Client(SQLModel, table=True):
@@ -7,7 +8,6 @@ class Client(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
-    contact: Dict[str, Any] = Field(sa_column_kwargs={"type_": JSON})
+    contact: Dict[str, Any] = Field(sa_column=Column(JSON))
     notes: Optional[str] = None
-    pii_masked_fields: Dict[str, Any] = Field(default_factory=dict, sa_column_kwargs={"type_": JSON})
-
+    pii_masked_fields: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSON))

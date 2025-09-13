@@ -3,13 +3,14 @@ from sqlmodel import Session, select
 from app.api.deps import get_db, get_current_user, broker_row_scope
 from app.models import Task, Deal
 from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
+from typing import Optional
 
 
 router = APIRouter()
 
 
 @router.get("/", response_model=list[TaskRead])
-def list_tasks(db: Session = Depends(get_db), owner_scope: int | None = Depends(broker_row_scope)):
+def list_tasks(db: Session = Depends(get_db), owner_scope: Optional[int] = Depends(broker_row_scope)):
     stmt = select(Task)
     if owner_scope is not None:
         # join via deal ownership
@@ -31,7 +32,7 @@ def create_task(payload: TaskCreate, db: Session = Depends(get_db), user=Depends
 
 
 @router.put("/{task_id}", response_model=TaskRead)
-def update_task(task_id: int, payload: TaskUpdate, db: Session = Depends(get_db), owner_scope: int | None = Depends(broker_row_scope)):
+def update_task(task_id: int, payload: TaskUpdate, db: Session = Depends(get_db), owner_scope: Optional[int] = Depends(broker_row_scope)):
     t = db.get(Task, task_id)
     if not t:
         raise HTTPException(status_code=404, detail="Not found")
@@ -48,7 +49,7 @@ def update_task(task_id: int, payload: TaskUpdate, db: Session = Depends(get_db)
 
 
 @router.post("/assign", response_model=TaskRead)
-def assign_task(task_id: int, assignee_user_id: int | None, db: Session = Depends(get_db), owner_scope: int | None = Depends(broker_row_scope)):
+def assign_task(task_id: int, assignee_user_id: Optional[int], db: Session = Depends(get_db), owner_scope: Optional[int] = Depends(broker_row_scope)):
     t = db.get(Task, task_id)
     if not t:
         raise HTTPException(status_code=404, detail="Not found")
@@ -64,7 +65,7 @@ def assign_task(task_id: int, assignee_user_id: int | None, db: Session = Depend
 
 
 @router.post("/{task_id}/complete", response_model=TaskRead)
-def complete_task(task_id: int, db: Session = Depends(get_db), owner_scope: int | None = Depends(broker_row_scope)):
+def complete_task(task_id: int, db: Session = Depends(get_db), owner_scope: Optional[int] = Depends(broker_row_scope)):
     t = db.get(Task, task_id)
     if not t:
         raise HTTPException(status_code=404, detail="Not found")
@@ -80,7 +81,7 @@ def complete_task(task_id: int, db: Session = Depends(get_db), owner_scope: int 
 
 
 @router.delete("/{task_id}", response_model=dict)
-def delete_task(task_id: int, db: Session = Depends(get_db), owner_scope: int | None = Depends(broker_row_scope)):
+def delete_task(task_id: int, db: Session = Depends(get_db), owner_scope: Optional[int] = Depends(broker_row_scope)):
     t = db.get(Task, task_id)
     if not t:
         raise HTTPException(status_code=404, detail="Not found")
@@ -91,4 +92,3 @@ def delete_task(task_id: int, db: Session = Depends(get_db), owner_scope: int | 
     db.delete(t)
     db.commit()
     return {"ok": True}
-

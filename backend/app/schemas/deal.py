@@ -14,13 +14,13 @@ class DealCreate(BaseModel):
 class DealRead(BaseModel):
     id: int
     client_id: int
-    owner_user_id: int | None
-    lender: str | None
-    loan_type: str | None
-    amount: float | None
+    owner_user_id: Optional[int]
+    lender: Optional[str]
+    loan_type: Optional[str]
+    amount: Optional[float]
     stage: str
     tags: List[str]
-    due_date: str | None
+    due_date: Optional[str]
 
     class Config:
         from_attributes = True
@@ -36,4 +36,3 @@ class DealUpdate(BaseModel):
 
 class DealTransition(BaseModel):
     to_stage: str
-

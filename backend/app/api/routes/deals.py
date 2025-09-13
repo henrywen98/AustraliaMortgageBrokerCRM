@@ -4,6 +4,7 @@ from app.api.deps import get_db, get_current_user, broker_row_scope
 from app.models import Deal, DealStage
 from app.schemas.deal import DealCreate, DealRead, DealUpdate, DealTransition
 from app.services.audit import log_activity
+from typing import Optional
 
 
 router = APIRouter()
@@ -12,7 +13,7 @@ router = APIRouter()
 @router.get("/", response_model=list[DealRead])
 def list_deals(
     db: Session = Depends(get_db),
-    owner_scope: int | None = Depends(broker_row_scope),
+    owner_scope: Optional[int] = Depends(broker_row_scope),
 ):
     stmt = select(Deal)
     if owner_scope is not None:
@@ -35,8 +36,8 @@ def update_deal(
     payload: DealUpdate,
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
-    owner_scope: int | None = Depends(broker_row_scope),
-    request: Request | None = None,
+    owner_scope: Optional[int] = Depends(broker_row_scope),
+    request: Optional[Request] = None,
 ):
     d = db.get(Deal, deal_id)
     if not d:
@@ -67,8 +68,8 @@ def transition_deal(
     payload: DealTransition,
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
-    owner_scope: int | None = Depends(broker_row_scope),
-    request: Request | None = None,
+    owner_scope: Optional[int] = Depends(broker_row_scope),
+    request: Optional[Request] = None,
 ):
     d = db.get(Deal, deal_id)
     if not d:
@@ -100,7 +101,7 @@ def delete_deal(
     deal_id: int,
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
-    owner_scope: int | None = Depends(broker_row_scope),
+    owner_scope: Optional[int] = Depends(broker_row_scope),
 ):
     d = db.get(Deal, deal_id)
     if not d:
@@ -110,4 +111,3 @@ def delete_deal(
     db.delete(d)
     db.commit()
     return {"ok": True}
-

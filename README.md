@@ -123,9 +123,11 @@ CREATE TABLE export_jobs (
 后端与前端目录大纲、关键代码与运行步骤详见下方。
 
 运行快速开始
-- 复制 `.env.example` 为 `.env`（或在 docker-compose 使用 env_file）
-- `docker-compose up --build` 一键启动：api、frontend、db、redis
-- 打开 `http://localhost:5173` 前端；API 文档 `http://localhost:8000/docs`
+- 不想用 Docker？请看更详细的本地运行指南：`USAGE.md`（推荐用 SQLite 本地启动）
+- 使用 Docker（可选）：
+  - 复制 `.env.example` 为 `.env`；复制 `backend/.env.example` 为 `backend/.env`
+  - `docker compose up --build` 一键启动：api、frontend、db、redis
+  - 打开 `http://localhost:5173` 前端；API 文档 `http://localhost:8000/docs`
 
 自测要点（对照验收标准）
 - Broker 登录仅能看到自己名下 Deal/Task（API + 前端过滤）
