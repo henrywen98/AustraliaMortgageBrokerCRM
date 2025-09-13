@@ -1,0 +1,2 @@
+Alembic migrations live here. Use `alembic revision --autogenerate -m "init"` then `alembic upgrade head`.
+
